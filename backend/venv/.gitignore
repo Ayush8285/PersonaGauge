@@ -6,7 +6,7 @@ __pycache__/
 *.pyc
 *.pyo
 backend/venv/pyvenv.cfg
-backend/venv/Lib/site-packages/
+backend/venv/Lib/
 
 # Ignore environment variable files (if used)
 .env
