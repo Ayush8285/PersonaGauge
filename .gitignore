@@ -1,0 +1,23 @@
+# Ignore node_modules (React dependencies)
+frontend/node_modules/
+
+# Ignore build files
+frontend/dist/
+frontend/.vite/
+frontend/.parcel-cache/
+
+# Ignore environment variables (API keys, database credentials)
+backend/.env
+frontend/.env
+
+# Ignore Python virtual environment (venv)
+backend/venv/
+backend/__pycache__/
+*.pyc
+*.pyo
+
+# Ignore VSCode settings (Optional)
+.vscode/
+
+# Ignore log files
+*.log
