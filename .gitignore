@@ -12,6 +12,7 @@ frontend/.env
 
 # Ignore Python virtual environment (venv)
 backend/venv/
+backend/venv/pyvenv.cfg
 backend/__pycache__/
 *.pyc
 *.pyo
