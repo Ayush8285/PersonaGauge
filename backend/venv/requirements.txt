@@ -1,6 +1,0 @@
-flask
-flask-cors
-pymongo
-nltk
-scikit-learn
-python-dotenv
