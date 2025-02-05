@@ -1,0 +1,48 @@
+[
+    {
+      "question": "What is your preferred work environment?",
+      "options": [
+        "Individual work",
+        "Team collaboration",
+        "A mix of both",
+        "Work from home"
+      ]
+    },
+    {
+      "question": "How do you handle stress?",
+      "options": [
+        "Stay calm and focused",
+        "Take a break and recharge",
+        "Delegate tasks to others",
+        "Push through and finish the task"
+      ]
+    },
+    {
+      "question": "Which of these best describes your ideal job role?",
+      "options": [
+        "Creative/Design",
+        "Technical/Programming",
+        "Management",
+        "Sales/Marketing"
+      ]
+    },
+    {
+      "question": "How do you prefer to make decisions?",
+      "options": [
+        "Based on logic and facts",
+        "Based on intuition and gut feeling",
+        "Collaborating with others",
+        "Looking at the bigger picture"
+      ]
+    },
+    {
+      "question": "What motivates you the most in your career?",
+      "options": [
+        "Achieving personal goals",
+        "Working with a great team",
+        "Learning new skills",
+        "Making a difference"
+      ]
+    }
+  ]
+  
