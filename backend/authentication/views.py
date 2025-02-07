@@ -27,6 +27,62 @@ def generate_jwt_token(user):
     return token
 
 
+# class SignupView(APIView):
+#     permission_classes = [AllowAny]
+
+#     def post(self, request):
+#         serializer = UserSerializer(data=request.data)
+#         if serializer.is_valid():
+#             email = serializer.validated_data["email"]
+#             password = serializer.validated_data["password"]
+#             name = serializer.validated_data["name"]
+
+#             # Check if user already exists
+#             if users_collection.find_one({"email": email}):
+#                 return Response({"error": "User already exists"}, status=400)
+
+#             # Hash password
+#             hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+#             # Insert user into MongoDB
+#             new_user = {
+#                 "email": email,
+#                 "password": hashed_password,
+#                 "name": name
+#             }
+#             result = users_collection.insert_one(new_user)
+#             user_id = str(result.inserted_id)  # Convert ObjectId to string
+
+#             # Generate JWT tokens
+#             payload = {
+#                 "id": user_id,
+#                 "email": email,
+#                 "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1),
+#                 "iat": datetime.datetime.utcnow(),
+#             }
+#             access_token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
+
+#             refresh_payload = {
+#                 "id": user_id,
+#                 "email": email,
+#                 "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7),
+#                 "iat": datetime.datetime.utcnow(),
+#             }
+#             refresh_token = jwt.encode(refresh_payload, settings.SECRET_KEY, algorithm="HS256")
+
+#             return Response(
+#                 {
+#                     "message": "User registered successfully",
+#                     "user": {"id": user_id, "email": email, "name": name},
+#                     "access": access_token,
+#                     "refresh": refresh_token,
+#                 },
+#                 status=201,
+#             )
+
+#         return Response(serializer.errors, status=400)
+
+
 class SignupView(APIView):
     permission_classes = [AllowAny]
 
@@ -53,29 +109,29 @@ class SignupView(APIView):
             result = users_collection.insert_one(new_user)
             user_id = str(result.inserted_id)  # Convert ObjectId to string
 
-            # Generate JWT tokens
+            # Generate JWT tokens with `user_id`
             payload = {
-                "id": user_id,
+                "id": user_id,  # Store user_id in token
                 "email": email,
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1),
                 "iat": datetime.datetime.utcnow(),
             }
             access_token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
 
-            refresh_payload = {
-                "id": user_id,
-                "email": email,
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7),
-                "iat": datetime.datetime.utcnow(),
-            }
-            refresh_token = jwt.encode(refresh_payload, settings.SECRET_KEY, algorithm="HS256")
+            # refresh_payload = {
+            #     "id": user_id,  # Store user_id in refresh token
+            #     "email": email,
+            #     "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7),
+            #     "iat": datetime.datetime.utcnow(),
+            # }
+            # refresh_token = jwt.encode(refresh_payload, settings.SECRET_KEY, algorithm="HS256")
 
             return Response(
                 {
                     "message": "User registered successfully",
-                    "user": {"id": user_id, "email": email, "name": name},
+                    "user": {"id": user_id, "email": email, "name": name},  # Include user_id
                     "access": access_token,
-                    "refresh": refresh_token,
+                    # "refresh": refresh_token,
                 },
                 status=201,
             )
@@ -83,10 +139,54 @@ class SignupView(APIView):
         return Response(serializer.errors, status=400)
 
 
+
+
 class UserObject:
     """Simulate a Django user object with an `id` field."""
     def __init__(self, user_id):
         self.id = user_id
+
+# class LoginView(APIView):
+#     permission_classes = [AllowAny]
+
+#     def post(self, request):
+#         serializer = LoginSerializer(data=request.data)
+#         if serializer.is_valid():
+#             email = serializer.validated_data["email"]
+#             password = serializer.validated_data["password"]
+
+#             user = users_collection.find_one({"email": email})
+#             if not user:
+#                 return Response({"error": "Invalid credentials"}, status=400)
+
+#             stored_password = user["password"]
+#             if isinstance(stored_password, str):
+#                 stored_password = stored_password.encode('utf-8')
+
+#             if not bcrypt.checkpw(password.encode('utf-8'), stored_password):
+#                 return Response({"error": "Invalid credentials"}, status=400)
+
+#             # Ensure user ID is an ObjectId
+#             # user_id = user.get("_id")
+#             # if isinstance(user_id, str):
+#             #     user_id = ObjectId(user_id)
+
+#             user_id = str(user["_id"])  # Convert ObjectId to string
+#             user_instance = UserObject(user_id)
+
+#             # user_instance = UserObject(user_id)  # Create mock user object with ID
+
+#             refresh = RefreshToken.for_user(user_instance)  # Pass user instance
+#             access_token = str(refresh.access_token)
+
+#             return Response({
+#                 "access": access_token,
+#                 "refresh": str(refresh),
+#                 "user": {"email": email, "name": user["name"]}
+#             })
+#         return Response(serializer.errors, status=400)
+
+
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -108,23 +208,25 @@ class LoginView(APIView):
             if not bcrypt.checkpw(password.encode('utf-8'), stored_password):
                 return Response({"error": "Invalid credentials"}, status=400)
 
-            # Ensure user ID is an ObjectId
-            # user_id = user.get("_id")
-            # if isinstance(user_id, str):
-            #     user_id = ObjectId(user_id)
+            # Convert ObjectId to string
+            user_id = str(user["_id"])
 
-            user_id = str(user["_id"])  # Convert ObjectId to string
+            # Simulate Django user object
             user_instance = UserObject(user_id)
 
-            # user_instance = UserObject(user_id)  # Create mock user object with ID
-
-            refresh = RefreshToken.for_user(user_instance)  # Pass user instance
+            # Generate JWT tokens with `user_id`
+            refresh = RefreshToken.for_user(user_instance)
             access_token = str(refresh.access_token)
 
             return Response({
+                "message": "Login successful",
+                "user": {
+                    "id": user_id,  # Include user_id
+                    "email": email,
+                    "name": user["name"]
+                },
                 "access": access_token,
-                "refresh": str(refresh),
-                "user": {"email": email, "name": user["name"]}
+                # "refresh": str(refresh),
             })
         return Response(serializer.errors, status=400)
 

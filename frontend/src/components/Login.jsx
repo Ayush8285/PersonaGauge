@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/slices/authSlice";
 import { Button, Input, message, Form, Spin, Typography, Card, Space } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { IoLogIn } from "react-icons/io5"; // Import icon
 
 const { Title } = Typography;
@@ -12,8 +12,9 @@ const { Title } = Typography;
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+  const { loading, error, isAuthenticated, user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
       if (isAuthenticated) {

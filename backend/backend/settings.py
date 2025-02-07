@@ -46,6 +46,9 @@ EXTERNAL_APPS = [
     "authentication",   #user login , signup
     "personaGauge",
     "quiz",
+    "ml_processing",       #correct data send to svm model for prediction  
+    "feedback",            #feedback from user
+    
 ]
 
 INSTALLED_APPS += EXTERNAL_APPS

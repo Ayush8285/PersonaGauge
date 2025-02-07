@@ -12,3 +12,8 @@ db = client["personaGauge"]
 fs = gridfs.GridFS(db)
 
 # Export database and GridFS instance for use in other files
+
+# Collections
+cv_data = db["cv_data"]  # Ensure this exists
+quiz_answers = db["quiz_answers"]
+users = db["users"]

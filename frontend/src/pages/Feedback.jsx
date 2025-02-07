@@ -21,7 +21,7 @@ const Feedback = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:8000/submit-feedback/", feedbackData);  // backend url
+      const response = await axios.post("http://localhost:8000/api/feedback/submit-feedback/", feedbackData);  // backend url
       if (response.status === 201) {
         message.success("Feedback submitted successfully!");
         // Clear the form

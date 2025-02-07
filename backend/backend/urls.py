@@ -23,4 +23,6 @@ urlpatterns = [
      path("api/cv/", include("cv_processing.urls")),  # Including CV-related URLs
     path("api/quiz/", include("quiz.urls")), # Including quiz-related URLs
     path("api/auth/", include("authentication.urls")), #for user login and logout
+    path("api/ml/", include("ml_processing.urls")), # Including ML-related URLs
+    path("api/feedback/", include("feedback.urls")),  # Include feedback API
 ]

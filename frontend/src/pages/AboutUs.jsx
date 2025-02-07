@@ -25,12 +25,12 @@ const AboutUs = () => {
           enabling them to make informed decisions about their careers and personal growth.
         </Paragraph>
 
-        <Title level={4}>Our Team</Title>
+        {/* <Title level={4}>Our Team</Title>
         <Paragraph>
           Our team consists of passionate professionals who are committed to bringing the best personality insights
           to users. With expertise in data science, AI, psychology, and design, we aim to create the most accurate
           and user-friendly experience possible.
-        </Paragraph>
+        </Paragraph> */}
 
         <Title level={4}>Contact Us</Title>
         <Paragraph>

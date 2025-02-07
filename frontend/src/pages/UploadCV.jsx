@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Upload, Button, message, Space, Progress, Typography, Card, Divider } from "antd";
 import { UploadOutlined, FileDoneOutlined } from "@ant-design/icons";
 import { IoDocument } from "react-icons/io5";
@@ -13,6 +14,7 @@ const UploadCV = () => {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
+  const userId = useSelector((state) => state.auth.userId); 
 
   const handleFileChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
@@ -29,6 +31,7 @@ const UploadCV = () => {
 
     const formData = new FormData();
     formData.append("cv", fileList[0].originFileObj);
+    formData.append("user_id", userId);  // Include user_id in the request
 
     try {
       const response = await axios.post(
@@ -36,6 +39,7 @@ const UploadCV = () => {
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
+          // body: JSON.stringify({ user_id: userId }),
           onUploadProgress: (progressEvent) => {
             const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
             setProgress(percentCompleted);

@@ -27,8 +27,9 @@ export const login = createAsyncThunk("auth/login", async (credentials, { reject
 // ✅ Initial State
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")) || null,
-  accessToken: sessionStorage.getItem("accessToken") || null,
-  refreshToken: sessionStorage.getItem("refreshToken") || null,
+  userId: localStorage.getItem("user_id") || null,  // Store user_id
+  accessToken: localStorage.getItem("accessToken") || null,
+  // refreshToken: sessionStorage.getItem("refreshToken") || null,
   isAuthenticated: !!localStorage.getItem("accessToken"),
   loading: false,
   error: null,
@@ -41,10 +42,14 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.user = null;
+      state.userId = null;
       state.accessToken = null;
-      state.refreshToken = null;
+      // state.refreshToken = null;
       state.isAuthenticated = false;
-      sessionStorage.clear();
+      // localStorage.clear();
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user_id");
+      window.location.reload();
     },
   },
   extraReducers: (builder) => {
@@ -57,12 +62,14 @@ const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
+        state.userId = action.payload.user.id;  // Store user_id
         state.accessToken = action.payload.access;
-        state.refreshToken = action.payload.refresh;
+        // state.refreshToken = action.payload.refresh;
         state.user = action.payload.user;
-        sessionStorage.setItem("accessToken", action.payload.access);
-        sessionStorage.setItem("refreshToken", action.payload.refresh);
-        sessionStorage.setItem("user", JSON.stringify(action.payload.user));
+        localStorage.setItem("user_id", action.payload.user.id);
+        localStorage.setItem("accessToken", action.payload.access);
+        // sessionStorage.setItem("refreshToken", action.payload.refresh);
+        // sessionStorage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
@@ -77,12 +84,14 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
+        state.userId = action.payload.user.id;  // Store user_id
         state.accessToken = action.payload.access;
-        state.refreshToken = action.payload.refresh;
+        // state.refreshToken = action.payload.refresh;
         state.user = action.payload.user;
-        sessionStorage.setItem("accessToken", action.payload.access);
-        sessionStorage.setItem("refreshToken", action.payload.refresh);
-        sessionStorage.setItem("user", JSON.stringify(action.payload.user));
+        localStorage.setItem("user_id", action.payload.user.id);
+        localStorage.setItem("accessToken", action.payload.access);
+        // sessionStorage.setItem("refreshToken", action.payload.refresh);
+        // sessionStorage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;

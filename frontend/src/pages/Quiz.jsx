@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Button, Radio, Card, Space, Typography, Divider, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import questions from "../data/questions.json";  // Questions JSON
@@ -10,7 +11,7 @@ const Quiz = () => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [answers, setAnswers] = useState([]);
   const navigate = useNavigate();
-  const userId = "user123"; // Replace with actual user ID (from auth)
+  const userId = useSelector((state) => state.auth.userId); // Replace with actual user ID (from auth)
 
   useEffect(() => {
     setAnswers([]); // Reset answers on page load

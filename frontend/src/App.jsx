@@ -21,18 +21,29 @@ import Signup from "./components/Signup";
 import NotFound from "./pages/NotFound"; // Optional: Handle 404 pages
 
 const App = () => {
+  // const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   const accessToken = localStorage.getItem("accessToken");
+  //   // const refreshToken = localStorage.getItem("refreshToken")
+  //   const user = localStorage.getItem("user");
+
+  //   if (accessToken && user /*&& refreshToken*/) {
+  //     dispatch(login.fulfilled( { access: accessToken /*, refresh: refreshToken,*/, user: JSON.parse(user) }));
+  //   }
+  // }, [dispatch]);
+  // const { user } = useSelector((state) => state.auth); // Get auth state
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const accessToken = sessionStorage.getItem("accessToken");
-    const refreshToken = sessionStorage.getItem("refreshToken")
-    const user = sessionStorage.getItem("user");
+    const accessToken = localStorage.getItem("accessToken");
+    const user = JSON.parse(localStorage.getItem("user"));
 
-    if (accessToken && user && refreshToken) {
-      dispatch(login.fulfilled( { access: accessToken, refresh: refreshToken, user: JSON.parse(user) }));
+    if (accessToken && user) {
+      dispatch(login.fulfilled({ user, access: accessToken })); // ✅ Restore login state
     }
   }, [dispatch]);
-  const { user } = useSelector((state) => state.auth); // Get auth state
 
   return (
     <Router>

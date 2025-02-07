@@ -29,6 +29,11 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       icon: <IoDocument />,
       label: <Link to="/uploadcv">Upload CV</Link>,
     },
+
+    //jab user quiz submit kr de tho ak menu item ana chahye jispa result page show hoga
+    //  usi  user ka liye sirf jisne submit ki hogi quiz  
+
+
     // {
     //   key: "3",
     //   icon: <QuestionCircleOutlined />,

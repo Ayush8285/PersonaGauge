@@ -10,9 +10,9 @@ const LogoutButton = () => {
 
   const handleLogout = () => {
     dispatch(logout()); // Clear Redux state
-    sessionStorage.removeItem("accessToken"); // Remove token from storage
-    sessionStorage.removeItem("refreshToken");
-    sessionStorage.removeItem("user");
+    // localStorage.removeItem("accessToken"); // Remove token from storage
+    // sessionStorage.removeItem("refreshToken");
+    // sessionStorage.removeItem("user");
     message.success("Logged out successfully!");
     navigate("/login"); // Redirect to login
   };

@@ -32,12 +32,18 @@ def submit_quiz(request):
 
 @csrf_exempt
 def get_quiz_answers(request, user_id):
-    quiz_data = quiz_collection.find_one({"user_id": user_id})
+    """Fetches a user's quiz answers including questions and their responses."""
+    try:
+        # Find the quiz answers for the given user_id
+        quiz_data = quiz_collection.find_one({"user_id": user_id})
 
-    if not quiz_data:
-        return JsonResponse({"error": "No quiz data found"}, status=404)
+        if not quiz_data:
+            return JsonResponse({"error": "No quiz data found"}, status=404)
 
-    return JsonResponse({
-        "user_id": quiz_data["user_id"],
-        "responses": quiz_data["responses"]
-    }, safe=False)  # Ensure JSON format
+        return JsonResponse({
+            "user_id": quiz_data["user_id"],
+            "responses": quiz_data.get("responses", [])  # List of questions & answers
+        }, safe=False, status=200)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
