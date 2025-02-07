@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,10 +38,22 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "personaGauge",
 ]
 
+EXTERNAL_APPS = [
+    "corsheaders",    #to allow cross orgin resouce sharing to allow the frontend to access the backend
+    "cv_processing",    # for cv processing 
+    "authentication",   #user login , signup
+    "personaGauge",
+    "quiz",
+    "personality",      #model for personality prediction (SVM)
+]
+
+INSTALLED_APPS += EXTERNAL_APPS
+
+
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware", #to allow cross orgin resouce sharing
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -116,3 +129,42 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+
+#CORS SETTINGS
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # React Frontend URL
+]
+
+CORS_ALLOW_CREDENTIALS = True  # If sending authentication tokens
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "DELETE",
+    "OPTIONS"
+]
+
+CORS_ALLOW_HEADERS = [
+    "Authorization",
+    "Content-Type",
+]
+
+
+#authentication settings
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+}
+
+AUTH_USER_MODEL = "authentication.User"  # Custom user model
+

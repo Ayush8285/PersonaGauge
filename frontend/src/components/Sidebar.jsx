@@ -2,9 +2,13 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { Layout, Menu } from "antd";
-import { HomeOutlined, SettingOutlined, FileOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { HomeOutlined, SettingOutlined, FileOutlined, QuestionCircleOutlined, } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { MdOutlineFeedback, MdFeedback} from "react-icons/md";
+import { FaCircleInfo,  FaPhone } from "react-icons/fa6";
+import { FaHome } from "react-icons/fa";
+import { IoDocument, IoSettings  } from "react-icons/io5";
 
 const { Sider } = Layout;
 
@@ -17,12 +21,12 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   const menuItems = [
     {
       key: "1",
-      icon: <HomeOutlined />,
+      icon: <FaHome />,
       label: <Link to="/">Home</Link>,
     },
     {
       key: "2",
-      icon: <FileOutlined />,
+      icon: <IoDocument />,
       label: <Link to="/uploadcv">Upload CV</Link>,
     },
     // {
@@ -32,7 +36,22 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     // },
     {
       key: "4",
-      icon: <SettingOutlined />,
+      icon: <MdFeedback />,
+      label: <Link to="/feedback">Feedback</Link>
+    },
+    {
+      key: "5",
+      icon: <FaCircleInfo />,
+      label: <Link to="/about">About Us</Link>
+    },
+    {
+      key: "6",
+      icon: <FaPhone />,
+      label: <Link to="/contact">Contact Us</Link>
+    },
+    {
+      key: "7",
+      icon: <IoSettings  />,
       label: <Link to="/settings">Settings</Link>,
     },
     

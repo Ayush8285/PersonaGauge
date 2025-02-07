@@ -1,6 +1,14 @@
 import pymongo
+import gridfs
 
-url = 'mongodb://localhost:27017/'
-client = pymongo.MongoClient(url)
+# MongoDB connection
+MONGO_URI = "mongodb://localhost:27017/"
+client = pymongo.MongoClient(MONGO_URI)
 
-db = client['personaGauge']
+# Database name
+db = client["personaGauge"]
+
+# Initialize GridFS (for handling large files like PDFs)
+fs = gridfs.GridFS(db)
+
+# Export database and GridFS instance for use in other files

@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
-import { Upload, Button, message, Space, Progress, Typography, Card, Row, Col, Divider } from "antd";
+import { Upload, Button, message, Space, Progress, Typography, Card, Divider } from "antd";
 import { UploadOutlined, FileDoneOutlined } from "@ant-design/icons";
+import { IoDocument } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const { Title, Paragraph } = Typography;
 
@@ -16,27 +18,44 @@ const UploadCV = () => {
     setFileList(newFileList);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (fileList.length === 0) {
       message.error("Please upload your CV.");
       return;
     }
 
     setUploading(true);
-    let uploadProgress = 0;
-    
-    // Simulating file upload progress
-    const interval = setInterval(() => {
-      uploadProgress += 10;
-      setProgress(uploadProgress);
+    setProgress(10); // Initial progress
 
-      if (uploadProgress >= 100) {
-        clearInterval(interval);
+    const formData = new FormData();
+    formData.append("cv", fileList[0].originFileObj);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/cv/upload-cv/",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setProgress(percentCompleted);
+          },
+        }
+      );
+
+      if (response.status === 200) {
         message.success("CV uploaded successfully!");
-        setUploading(false);
-        navigate("/quiz");
+        setProgress(100);
+        setTimeout(() => {
+          navigate("/quiz"); // Redirect to the quiz page
+        }, 1500);
       }
-    }, 500); // Simulating upload progress every 500ms
+    } catch (error) {
+      message.error("Error uploading CV. Please try again.");
+      setProgress(0);
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleRemove = () => {
@@ -47,7 +66,10 @@ const UploadCV = () => {
     <div className="p-6" style={{ maxWidth: "800px", margin: "auto", paddingTop: "40px" }}>
       {/* Hero Section */}
       <Card style={{ borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
-        <Title level={2} className="text-center">Upload Your CV</Title>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}>
+          <IoDocument style={{ fontSize: "30px", marginRight: "8px", color: "#1890ff" }} />
+          <Title level={2}>Upload Your CV</Title>
+        </div>
         <Paragraph className="text-center">
           Upload your CV, and then proceed to take the quiz to get tailored job suggestions based on your skills and personality.
         </Paragraph>
@@ -58,11 +80,10 @@ const UploadCV = () => {
       {/* Upload Section */}
       <Card style={{ borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
         <Upload
-          action="/upload" // Your upload endpoint
           fileList={fileList}
           onChange={handleFileChange}
           beforeUpload={() => false} // Prevent auto-upload
-          accept=".pdf, .doc, .docx, .txt" // File types allowed
+          accept=".pdf, .doc, .docx, .txt"
           showUploadList={false}
         >
           <Button icon={<UploadOutlined />} size="large" block style={{ borderRadius: "8px" }}>

@@ -2,11 +2,18 @@
 import { Button, Card, Typography, Space } from "antd";
 import { UploadOutlined, QuestionCircleOutlined, BarChartOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const { Title, Paragraph } = Typography;
 
 const Home = () => {
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+
+  if (!user) {
+    return <div>Loading...</div>; // Avoid rendering if user is null
+  }
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-indigo-600 to-teal-500 p-8 flex flex-col items-center justify-center text-center">
@@ -59,7 +66,7 @@ const Home = () => {
         <Card
           hoverable
           className="text-center transition-transform duration-300 transform hover:scale-105 shadow-lg w-full sm:w-80 md:w-96"
-          onClick={() => navigate("/results")}
+          onClick={() => navigate("/result")}
         >
           <BarChartOutlined className="text-5xl text-yellow-600 mb-4 transition-all duration-300" />
           <Title level={4} className="text-xl font-semibold text-gray-800">Career Insights</Title>
