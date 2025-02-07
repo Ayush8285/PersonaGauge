@@ -1,0 +1,101 @@
+cv_text,quiz_q1,quiz_q2,quiz_q3,quiz_q4,quiz_q5,personality_label,job_role_label
+"AI researcher with expertise in deep learning, NLP, and computer vision.",2,2,1,4,1,Introverted,Cybersecurity Analyst
+"AI researcher with expertise in deep learning, NLP, and computer vision.",4,3,4,4,2,Conscientious,Graphic Designer
+"Cybersecurity analyst with knowledge of network security, ethical hacking, and risk assessment.",1,1,2,4,2,Introverted,Data Analyst
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",4,3,3,3,4,Openness,Graphic Designer
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",2,4,3,4,4,Extraverted,Sales Executive
+"Data analyst with proficiency in SQL, machine learning, and data visualization.",3,4,2,4,2,Creative,Marketing Manager
+"HR professional with experience in recruitment, employee engagement, and HR policies.",3,2,1,4,4,Analytical,AI Researcher
+"Data analyst with proficiency in SQL, machine learning, and data visualization.",4,2,3,1,4,Extraverted,Software Engineer
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",4,4,2,2,2,Openness,Sales Executive
+"Project manager with experience in Agile, Scrum, and stakeholder management.",3,2,3,2,3,Extraverted,Marketing Manager
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",2,1,3,4,3,Conscientious,Software Engineer
+"HR professional with experience in recruitment, employee engagement, and HR policies.",2,3,4,4,4,Creative,Project Manager
+"Project manager with experience in Agile, Scrum, and stakeholder management.",4,4,2,3,1,Introverted,HR Manager
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",4,2,2,2,2,Openness,Project Manager
+"Project manager with experience in Agile, Scrum, and stakeholder management.",3,4,2,3,2,Analytical,Cybersecurity Analyst
+"Marketing specialist with expertise in SEO, content strategy, and branding.",1,3,3,3,2,Analytical,Marketing Manager
+"Project manager with experience in Agile, Scrum, and stakeholder management.",4,2,3,1,1,Analytical,Sales Executive
+"AI researcher with expertise in deep learning, NLP, and computer vision.",1,3,3,3,2,Extraverted,Finance Analyst
+"Cybersecurity analyst with knowledge of network security, ethical hacking, and risk assessment.",2,1,1,4,2,Analytical,Marketing Manager
+"Graphic designer skilled in Adobe Photoshop, Illustrator, and UI/UX design.",4,3,4,4,1,Neurotic,Sales Executive
+"Project manager with experience in Agile, Scrum, and stakeholder management.",4,3,4,1,3,Introverted,Cybersecurity Analyst
+"Project manager with experience in Agile, Scrum, and stakeholder management.",4,2,2,2,1,Creative,HR Manager
+"Graphic designer skilled in Adobe Photoshop, Illustrator, and UI/UX design.",2,2,2,3,4,Extraverted,Sales Executive
+"Finance expert with background in financial modeling, investment analysis, and risk management.",3,3,3,4,4,Introverted,Marketing Manager
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",2,2,1,4,2,Neurotic,Data Analyst
+"Project manager with experience in Agile, Scrum, and stakeholder management.",3,1,4,1,2,Conscientious,Finance Analyst
+"Finance expert with background in financial modeling, investment analysis, and risk management.",4,1,2,3,1,Creative,AI Researcher
+"Finance expert with background in financial modeling, investment analysis, and risk management.",1,4,3,4,4,Agreeable,Finance Analyst
+"HR professional with experience in recruitment, employee engagement, and HR policies.",2,2,3,3,3,Extraverted,Cybersecurity Analyst
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",4,1,4,4,3,Extraverted,Graphic Designer
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",2,1,3,4,4,Conscientious,Sales Executive
+"AI researcher with expertise in deep learning, NLP, and computer vision.",1,1,3,1,4,Conscientious,Cybersecurity Analyst
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",3,3,4,3,3,Openness,Data Analyst
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",4,4,4,1,3,Analytical,HR Manager
+"Marketing specialist with expertise in SEO, content strategy, and branding.",3,2,3,2,3,Neurotic,Sales Executive
+"Marketing specialist with expertise in SEO, content strategy, and branding.",2,1,4,4,2,Creative,Graphic Designer
+"Data analyst with proficiency in SQL, machine learning, and data visualization.",2,3,3,3,3,Openness,Data Analyst
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",1,2,1,1,4,Openness,AI Researcher
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",2,4,1,3,3,Neurotic,Finance Analyst
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",2,3,3,4,3,Openness,Project Manager
+"Graphic designer skilled in Adobe Photoshop, Illustrator, and UI/UX design.",2,3,2,1,1,Extraverted,Software Engineer
+"AI researcher with expertise in deep learning, NLP, and computer vision.",1,1,1,2,1,Introverted,Software Engineer
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",1,2,2,3,2,Neurotic,Software Engineer
+"Cybersecurity analyst with knowledge of network security, ethical hacking, and risk assessment.",4,4,3,4,3,Analytical,Graphic Designer
+"AI researcher with expertise in deep learning, NLP, and computer vision.",1,4,1,2,1,Creative,HR Manager
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",2,1,1,2,2,Introverted,HR Manager
+"Finance expert with background in financial modeling, investment analysis, and risk management.",1,1,3,4,1,Neurotic,AI Researcher
+"Finance expert with background in financial modeling, investment analysis, and risk management.",2,4,4,4,3,Openness,HR Manager
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",2,4,4,3,4,Analytical,Project Manager
+"Cybersecurity analyst with knowledge of network security, ethical hacking, and risk assessment.",3,4,1,1,4,Agreeable,HR Manager
+"Marketing specialist with expertise in SEO, content strategy, and branding.",1,2,2,3,2,Conscientious,Data Analyst
+"Marketing specialist with expertise in SEO, content strategy, and branding.",1,2,1,3,2,Openness,Data Analyst
+"Graphic designer skilled in Adobe Photoshop, Illustrator, and UI/UX design.",3,4,2,1,4,Neurotic,AI Researcher
+"HR professional with experience in recruitment, employee engagement, and HR policies.",3,3,1,4,2,Neurotic,Marketing Manager
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",2,1,4,2,4,Openness,HR Manager
+"HR professional with experience in recruitment, employee engagement, and HR policies.",2,4,4,2,2,Openness,AI Researcher
+"Marketing specialist with expertise in SEO, content strategy, and branding.",3,1,1,3,1,Neurotic,Finance Analyst
+"AI researcher with expertise in deep learning, NLP, and computer vision.",3,4,3,3,4,Introverted,Software Engineer
+"Marketing specialist with expertise in SEO, content strategy, and branding.",4,2,4,1,3,Introverted,AI Researcher
+"Cybersecurity analyst with knowledge of network security, ethical hacking, and risk assessment.",4,3,2,3,1,Openness,HR Manager
+"Marketing specialist with expertise in SEO, content strategy, and branding.",4,3,2,4,3,Analytical,Finance Analyst
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",2,2,3,3,4,Agreeable,Software Engineer
+"Cybersecurity analyst with knowledge of network security, ethical hacking, and risk assessment.",1,2,3,4,2,Analytical,Marketing Manager
+"Project manager with experience in Agile, Scrum, and stakeholder management.",2,4,1,1,4,Introverted,Project Manager
+"HR professional with experience in recruitment, employee engagement, and HR policies.",2,4,3,3,4,Conscientious,AI Researcher
+"HR professional with experience in recruitment, employee engagement, and HR policies.",2,1,4,1,2,Neurotic,HR Manager
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",2,2,4,3,2,Agreeable,HR Manager
+"Marketing specialist with expertise in SEO, content strategy, and branding.",3,2,3,2,3,Creative,Data Analyst
+"Graphic designer skilled in Adobe Photoshop, Illustrator, and UI/UX design.",4,3,4,3,4,Creative,Project Manager
+"Data analyst with proficiency in SQL, machine learning, and data visualization.",2,2,4,4,2,Agreeable,HR Manager
+"Cybersecurity analyst with knowledge of network security, ethical hacking, and risk assessment.",2,4,4,3,2,Creative,Sales Executive
+"Cybersecurity analyst with knowledge of network security, ethical hacking, and risk assessment.",2,2,2,3,1,Introverted,AI Researcher
+"Finance expert with background in financial modeling, investment analysis, and risk management.",1,3,1,3,1,Introverted,Sales Executive
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",3,2,1,4,3,Extraverted,Data Analyst
+"Marketing specialist with expertise in SEO, content strategy, and branding.",4,1,3,3,3,Analytical,Software Engineer
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",3,1,1,3,4,Neurotic,HR Manager
+"AI researcher with expertise in deep learning, NLP, and computer vision.",1,1,1,4,4,Creative,Data Analyst
+"Graphic designer skilled in Adobe Photoshop, Illustrator, and UI/UX design.",3,4,3,3,1,Openness,Cybersecurity Analyst
+"Marketing specialist with expertise in SEO, content strategy, and branding.",4,1,4,3,1,Openness,Graphic Designer
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",2,3,4,3,2,Openness,Cybersecurity Analyst
+"HR professional with experience in recruitment, employee engagement, and HR policies.",2,1,2,2,3,Neurotic,Project Manager
+"Project manager with experience in Agile, Scrum, and stakeholder management.",1,1,3,1,1,Neurotic,Sales Executive
+"Project manager with experience in Agile, Scrum, and stakeholder management.",1,2,2,2,1,Extraverted,Cybersecurity Analyst
+"Marketing specialist with expertise in SEO, content strategy, and branding.",4,1,1,3,1,Conscientious,Graphic Designer
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",3,3,3,4,1,Extraverted,Finance Analyst
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",1,2,2,2,1,Openness,Graphic Designer
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",4,1,1,1,3,Openness,Project Manager
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",1,2,1,3,1,Openness,Data Analyst
+"Data analyst with proficiency in SQL, machine learning, and data visualization.",2,2,3,2,2,Conscientious,Graphic Designer
+"HR professional with experience in recruitment, employee engagement, and HR policies.",1,3,1,2,3,Agreeable,Finance Analyst
+"AI researcher with expertise in deep learning, NLP, and computer vision.",2,2,4,2,3,Creative,AI Researcher
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",2,2,4,1,4,Creative,Software Engineer
+"Software Engineer with 5 years experience in Python, Java, and cloud computing.",1,4,4,4,2,Openness,AI Researcher
+"Data analyst with proficiency in SQL, machine learning, and data visualization.",1,1,3,2,2,Extraverted,Graphic Designer
+"Marketing specialist with expertise in SEO, content strategy, and branding.",2,4,4,4,4,Neurotic,HR Manager
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",3,3,4,1,2,Conscientious,Cybersecurity Analyst
+"HR professional with experience in recruitment, employee engagement, and HR policies.",1,3,2,1,4,Analytical,Cybersecurity Analyst
+"Sales executive with strong negotiation skills, CRM knowledge, and client management.",3,1,3,3,1,Creative,AI Researcher
+"Marketing specialist with expertise in SEO, content strategy, and branding.",1,3,3,1,3,Conscientious,Data Analyst
+"Project manager with experience in Agile, Scrum, and stakeholder management.",3,1,2,1,1,Extraverted,Project Manager

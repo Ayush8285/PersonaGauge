@@ -46,7 +46,6 @@ EXTERNAL_APPS = [
     "authentication",   #user login , signup
     "personaGauge",
     "quiz",
-    "personality",      #model for personality prediction (SVM)
 ]
 
 INSTALLED_APPS += EXTERNAL_APPS
