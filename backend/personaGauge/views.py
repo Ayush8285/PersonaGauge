@@ -1,3 +1,4 @@
+# only for test
 from django.shortcuts import render
 from .models import user_collection
 from django.http import HttpResponse

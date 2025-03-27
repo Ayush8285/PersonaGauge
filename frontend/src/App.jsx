@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route,} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import MainLayout from "./components/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { Navigate } from "react-router-dom"; 
 
 import Home from "./pages/Home";
 import UploadCV from "./pages/UploadCV";
@@ -21,24 +22,14 @@ import Signup from "./components/Signup";
 import NotFound from "./pages/NotFound"; // Optional: Handle 404 pages
 
 const App = () => {
-  // const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   const accessToken = localStorage.getItem("accessToken");
-  //   // const refreshToken = localStorage.getItem("refreshToken")
-  //   const user = localStorage.getItem("user");
-
-  //   if (accessToken && user /*&& refreshToken*/) {
-  //     dispatch(login.fulfilled( { access: accessToken /*, refresh: refreshToken,*/, user: JSON.parse(user) }));
-  //   }
-  // }, [dispatch]);
-  // const { user } = useSelector((state) => state.auth); // Get auth state
 
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     const user = JSON.parse(localStorage.getItem("user"));
+    
 
     if (accessToken && user) {
       dispatch(login.fulfilled({ user, access: accessToken })); // ✅ Restore login state
@@ -49,13 +40,13 @@ const App = () => {
     <Router>
       <Routes>
         {/* Public Routes (Login & Signup) */}
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={ isAuthenticated ? <Navigate to={"/"} /> :<Login />} />
         <Route path="/signup" element={<Signup />} />
 
         {/* Protected Routes (Only for logged-in users) */}
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<MainLayout />}>
-            <Route index element={<Home />} />
+            <Route index element={ <Home />} />
             <Route path="user/:userId" element={<UserDetails />} />
             <Route path="uploadcv" element={<UploadCV />} />
             <Route path="quiz" element={<Quiz />} />
