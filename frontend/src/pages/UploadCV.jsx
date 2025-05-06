@@ -51,8 +51,8 @@ const UploadCV = () => {
         message.success("CV uploaded successfully!");
         setProgress(100);
         setTimeout(() => {
-          navigate("/quiz"); // Redirect to the quiz page
-        }, 1500);
+          navigate("/dashboard/quiz"); // Redirect to the quiz page
+        }, 2000);
       }
     } catch (error) {
       message.error("Error uploading CV. Please try again.");

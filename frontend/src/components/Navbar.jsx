@@ -18,7 +18,7 @@ const Navbar = () => {
       message.warning("Please upload your CV first before accessing user details.");
       return;
     }
-    navigate(`/user/${user.id}`); // Redirect to user details page
+    navigate(`/dashboard/user/${user.id}`); // Redirect to user details page
   };
 
   return (
@@ -44,9 +44,9 @@ const Navbar = () => {
       </Text>
 
       {/* Right: User Info & Logout */}
-      <Space size="large">
+      <Space size="large" >
         {/* User Details Button */}
-        <Button type="primary" onClick={handleUserDetailsClick}>
+        <Button type="primary" onClick={handleUserDetailsClick} >
           User Details
         </Button>
         <LogoutButton />

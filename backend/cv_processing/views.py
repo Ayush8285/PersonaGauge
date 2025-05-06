@@ -1,6 +1,7 @@
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
 from pymongo import MongoClient
 from gridfs import GridFS
 import pdfplumber  # For text extraction
@@ -41,28 +42,6 @@ def upload_cv(request):
             "user_id": user_id
         })
 
-# @csrf_exempt
-# def upload_cv(request):
-#     if request.method == "POST":
-#         if "cv" not in request.FILES:
-#             return JsonResponse({"error": "No file uploaded"}, status=400)
-
-#         file = request.FILES["cv"]
-#         file_id = fs.put(file.read(), filename=file.name)  # Store file in GridFS
-
-#         # Extract text from the CV
-#         extracted_text = extract_text_from_pdf(file)
-
-#         # Store extracted text in MongoDB collection
-#         cv_data = {
-#             "file_id": str(file_id),  
-#             "filename": file.name,
-#             "extracted_text": extracted_text
-#         }
-#         cv_collection.insert_one(cv_data)
-
-#         return JsonResponse({"message": "File uploaded", "file_id": str(file_id)})
-
 
 
 def extract_text_from_pdf(file):
@@ -75,58 +54,44 @@ def extract_text_from_pdf(file):
     return text.strip()
 
 
-# def extract_text_from_pdf(file):
-#     text = ""
-#     with pdfplumber.open(file) as pdf:
-#         for page in pdf.pages:
-#             text += page.extract_text() + "\n"
-#     return text.strip()
+@require_GET
+def get_cv_metadata(request, user_id):
+    """Return CV metadata directly from the collection (no GridFS access)."""
+    try:
+        cv_record = cv_collection.find_one({"user_id": user_id})
+        if not cv_record:
+            return JsonResponse({"error": "CV not found for this user"}, status=404)
+
+        return JsonResponse({
+            "filename": cv_record.get("filename"),
+            "user_id": cv_record.get("user_id"),
+            "file_id": cv_record.get("file_id")
+        })
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 
 
+@require_GET
+def serve_cv_file(request, user_id):
+    """Serve the CV file using user_id passed in URL."""
+    try:
+        # Find the CV record using user_id
+        cv_record = cv_collection.find_one({"user_id": user_id})
+        if not cv_record:
+            return JsonResponse({"error": "CV not found for this user"}, status=404)
 
-#not working
-# @csrf_exempt
-# def get_cv_data(request):
-#     user_id = request.GET.get("user_id")  # Get user_id from request query
-#     file_id = request.GET.get("file_id")  # Get file_id from request query
+        file_id = cv_record.get("file_id")
+        if not file_id:
+            return JsonResponse({"error": "File ID missing in CV record"}, status=500)
 
-#     if file_id:
-#         # Fetch CV by file_id
-#         cv_data = cv_collection.find_one({"file_id": file_id})
-#         if not cv_data:
-#             return JsonResponse({"error": "CV not found"}, status=404)
-        
-#         return JsonResponse({
-#             "file_id": cv_data["file_id"],
-#             "filename": cv_data["filename"],
-#             "extracted_text": cv_data["extracted_text"],
-#             "user_id": cv_data["user_id"]
-#         })
-    
-#     elif user_id:
-#         # Fetch all CVs of a specific user
-#         user_cvs = list(cv_collection.find({"user_id": user_id}, {"_id": 0}))
-#         if not user_cvs:
-#             return JsonResponse({"error": "No CVs found for this user"}, status=404)
+        # Fetch file from GridFS using file_id
+        file = fs.get(ObjectId(file_id))
+        return FileResponse(file, content_type="application/pdf", filename=file.filename)
 
-#         return JsonResponse({"user_id": user_id, "cvs": user_cvs})
-    
-#     else:
-#         return JsonResponse({"error": "User ID or File ID is required"}, status=400)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 
 
-@csrf_exempt
-def get_user_cv(request, user_id):
-    """Retrieve CV data for a specific user."""
-    cv_data = cv_collection.find_one({"user_id": user_id})
-    
-    if not cv_data:
-        return JsonResponse({"error": "No CV found for this user"}, status=404)
-    
-    return JsonResponse({
-        "user_id": cv_data["user_id"],
-        "file_id": cv_data["file_id"],
-        "filename": cv_data["filename"]
-    })

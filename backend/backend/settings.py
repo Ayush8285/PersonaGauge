@@ -44,10 +44,10 @@ EXTERNAL_APPS = [
     "corsheaders",    #to allow cross orgin resouce sharing to allow the frontend to access the backend
     "cv_processing",    # for cv processing 
     "authentication",   #user login , signup
-    "personaGauge",
     "quiz",
     "ml_processing",       #correct data send to svm model for prediction  
     "feedback",            #feedback from user
+    "settings_app",         #user settings
     
 ]
 

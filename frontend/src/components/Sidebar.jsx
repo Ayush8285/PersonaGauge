@@ -22,12 +22,12 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     {
       key: "1",
       icon: <FaHome />,
-      label: <Link to="/">Home</Link>,
+      label: <Link to="/dashboard">Dashboard</Link>,
     },
     {
       key: "2",
       icon: <IoDocument />,
-      label: <Link to="/uploadcv">Upload CV</Link>,
+      label: <Link to="/dashboard/uploadcv">Upload CV</Link>,
     },
 
     //jab user quiz submit kr de tho ak menu item ana chahye jispa result page show hoga
@@ -36,30 +36,29 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
 
     // {
     //   key: "3",
-    //   icon: <QuestionCircleOutlined />,
-    //   label: <Link to="/quiz">Quiz</Link>,
+    //   icon: <Result />,
+    //   label: <Link to="/dashboard/result">Result</Link>,
     // },
     {
       key: "4",
       icon: <MdFeedback />,
-      label: <Link to="/feedback">Feedback</Link>
+      label: <Link to="/dashboard/feedback">Feedback</Link>
     },
     {
-      key: "5",
-      icon: <FaCircleInfo />,
-      label: <Link to="/about">About Us</Link>
-    },
-    {
-      key: "6",
-      icon: <FaPhone />,
-      label: <Link to="/contact">Contact Us</Link>
-    },
-    {
-      key: "7",
-      icon: <IoSettings  />,
-      label: <Link to="/settings">Settings</Link>,
-    },
-    
+    key: "5",
+    icon: <FaCircleInfo />,
+    label: <Link to="/dashboard/about">About Us</Link>
+  },
+  {
+    key: "6",
+    icon: <FaPhone />,
+    label: <Link to="/dashboard/contact">Contact Us</Link>
+  },
+  // {
+  //   key: "7",
+  //   icon: <IoSettings />,
+  //   label: <Link to="/dashboard/settings">Settings</Link>,
+  // },
   ];
 
   return (

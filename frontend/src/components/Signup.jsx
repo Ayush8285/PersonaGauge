@@ -26,9 +26,9 @@ const SignUp = () => {
   useEffect(() => {
     if (isAuthenticated) {
       message.success("Signup successful!");
-      navigate("/");
+      navigate("/dashboard");
     }
-  }, [isAuthenticated, navigate]); // Navigate when token is updated
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async () => {
     if (!form.name || !form.email || !form.password) {
@@ -37,6 +37,12 @@ const SignUp = () => {
     }
     dispatch(signup(form));
   };
+
+  useEffect(() => {
+    if (error) {
+      message.error(error);  // Display error message using Ant Design message
+    }
+  }, [error]);
 
   return (
     <div
@@ -135,13 +141,11 @@ const SignUp = () => {
                 <Spin />
               ) : (
                 <>
-                  <SiGnuprivacyguard style={{ marginRight: "8px" }} /> Sign Up
+                  <SiGnuprivacyguard style={{ marginRight: "8px" , display: "inline"}} /> Sign Up
                 </>
               )}
             </Button>
           </Form.Item>
-
-          {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
 
           <div style={{ marginTop: "20px" }}>
             <Space>

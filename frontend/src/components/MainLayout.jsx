@@ -15,7 +15,7 @@ const MainLayout = () => {
       {/* Sidebar */}
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
-      <Layout style={{ marginLeft: collapsed ? 100 : 230 }}>
+      <Layout style={{ marginLeft: collapsed ? 30 : 70 }}>
         {/* Fixed Navbar */}
         <Navbar />
 

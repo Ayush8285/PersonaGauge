@@ -5,33 +5,40 @@ import axios from "axios";
 const API_URL = "http://127.0.0.1:8000/api/auth";
 
 // ✅ Signup Thunk
-export const signup = createAsyncThunk("auth/signup", async (userData, { rejectWithValue }) => {
-  try {
-    const response = await axios.post(`${API_URL}/signup/`, userData);
-    return response.data; // { user, access, refresh }
-  } catch (error) {
-    return rejectWithValue(error.response?.data || "Signup failed");
+export const signup = createAsyncThunk(
+  "auth/signup",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${API_URL}/signup/`, userData);
+      return response.data; // { user_id, access, name }
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Signup failed");
+    }
   }
-});
+);
 
 // ✅ Login Thunk
-export const login = createAsyncThunk("auth/login", async (credentials, { rejectWithValue }) => {
-  try {
-    const response = await axios.post(`${API_URL}/login/`, credentials);
-    return response.data; // { user, access, refresh }
-  } catch (error) {
-    return rejectWithValue(error.response?.data || "Login failed");
+export const login = createAsyncThunk(
+  "auth/login",
+  async (credentials, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${API_URL}/login/`, credentials);
+      // console.log(response.data);
+      return response.data; // { user_id , access, name }
+      
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Login failed");
+    }
   }
-});
+);
 
 // ✅ Initial State
 const initialState = {
-  user: JSON.parse(localStorage.getItem("user")) || null,
-  userId: localStorage.getItem("user_id") || null,  // Store user_id
+  user: JSON.parse(sessionStorage.getItem("user")) || null,
+  userId: localStorage.getItem("user_id") || null, // Store user_id
   accessToken: localStorage.getItem("accessToken") || null,
-  // refreshToken: sessionStorage.getItem("refreshToken") || null,
   isAuthenticated: !!localStorage.getItem("accessToken"),
-  loading: false,
+  loading: true,
   error: null,
 };
 
@@ -44,12 +51,21 @@ const authSlice = createSlice({
       state.user = null;
       state.userId = null;
       state.accessToken = null;
-      // state.refreshToken = null;
       state.isAuthenticated = false;
-      // localStorage.clear();
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user_id");
+      sessionStorage.removeItem("user");
       window.location.reload();
+    },
+    restoreSession: (state, action) => {
+      state.user = action.payload.user;
+      state.userId = action.payload.user.id;
+      state.accessToken = action.payload.access;
+      state.isAuthenticated = true;
+      state.loading = false;
+    },
+    restoreFinished: (state) => {
+      state.loading = false;
     },
   },
   extraReducers: (builder) => {
@@ -62,14 +78,12 @@ const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.userId = action.payload.user.id;  // Store user_id
+        state.userId = action.payload.user.id;
         state.accessToken = action.payload.access;
-        // state.refreshToken = action.payload.refresh;
         state.user = action.payload.user;
         localStorage.setItem("user_id", action.payload.user.id);
         localStorage.setItem("accessToken", action.payload.access);
-        // sessionStorage.setItem("refreshToken", action.payload.refresh);
-        // sessionStorage.setItem("user", JSON.stringify(action.payload.user));
+        sessionStorage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
@@ -84,14 +98,12 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.userId = action.payload.user.id;  // Store user_id
+        state.userId = action.payload.user.id;
         state.accessToken = action.payload.access;
-        // state.refreshToken = action.payload.refresh;
         state.user = action.payload.user;
         localStorage.setItem("user_id", action.payload.user.id);
         localStorage.setItem("accessToken", action.payload.access);
-        // sessionStorage.setItem("refreshToken", action.payload.refresh);
-        // sessionStorage.setItem("user", JSON.stringify(action.payload.user));
+        sessionStorage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -100,5 +112,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, restoreSession, restoreFinished } = authSlice.actions;
 export default authSlice.reducer;

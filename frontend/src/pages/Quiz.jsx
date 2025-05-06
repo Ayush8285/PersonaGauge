@@ -51,8 +51,8 @@ const Quiz = () => {
 
       const data = await response.json();
       if (response.ok) {
-        console.log("Quiz submitted successfully!", data);
-        navigate("/result");
+        console.log("Quiz submitted successfully!", data);   
+        navigate("/dashboard/result");
       } else {
         console.error("Error submitting quiz:", data.error);
       }

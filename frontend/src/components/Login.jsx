@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/slices/authSlice";
@@ -12,16 +11,20 @@ const { Title } = Typography;
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
-  const { loading, error, isAuthenticated, user } = useSelector((state) => state.auth);
+  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  
 
   useEffect(() => {
-      if (isAuthenticated) {
-        message.success("Login successful!");
-        navigate("/");
-      }
-    }, [isAuthenticated, navigate]); // Navigate when token is updated
+    if (isAuthenticated) {
+      message.success("Login successful!");
+      navigate("/"); // Redirect to home when authenticated
+    }
+  }, [isAuthenticated, navigate]); // Navigate when token is updated
+
+  // If already authenticated, avoid showing the login page
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" />;
+  }
 
   const handleSubmit = async () => {
     if (!form.email || !form.password) {
@@ -99,11 +102,11 @@ const Login = () => {
               onMouseEnter={(e) => (e.target.style.backgroundColor = "#45a049")}
               onMouseLeave={(e) => (e.target.style.backgroundColor = "#4CAF50")}
             >
-              {loading ? <Spin /> : <><IoLogIn style={{ marginRight: "8px" }} /> Login</>}
+              {loading ? <Spin /> : <><IoLogIn style={{ marginRight: "8px" , display: "inline"}} /> Login</>}
             </Button>
           </Form.Item>
 
-          {error && <p style={{ color: "red", marginTop: "10px" }}>{typeof error === "string" ? error : JSON.stringify(error)}</p>}
+          {error && <p style={{ color: "red", marginTop: "10px" }}>{error?.message || "An error occurred"}</p>}
 
           <div style={{ marginTop: "20px" }}>
             <Space>

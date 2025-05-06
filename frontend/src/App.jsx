@@ -1,13 +1,19 @@
-/* eslint-disable no-unused-vars */
 import { useEffect } from "react";
-import { login } from "./redux/slices/authSlice";
-import { BrowserRouter as Router, Routes, Route,} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { Navigate } from "react-router-dom";
+
+import Loader from "./components/Loader";
 import MainLayout from "./components/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { Navigate } from "react-router-dom"; 
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import NotFound from "./pages/NotFound"; // Optional: Handle 404 pages
+
+import { restoreFinished, restoreSession } from "./redux/slices/authSlice";
 
 import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
 import UploadCV from "./pages/UploadCV";
 import Quiz from "./pages/Quiz";
 import Result from "./pages/Results";
@@ -17,36 +23,44 @@ import AboutUs from "./pages/AboutUs";
 import Settings from "./pages/Settings";
 import UserDetails from "./pages/UserDetails";
 
-import Login from "./components/Login";
-import Signup from "./components/Signup";
-import NotFound from "./pages/NotFound"; // Optional: Handle 404 pages
-
 const App = () => {
-
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
+  const { isAuthenticated, loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     const user = JSON.parse(localStorage.getItem("user"));
-    
+    // console.log(user);
 
     if (accessToken && user) {
-      dispatch(login.fulfilled({ user, access: accessToken })); // ✅ Restore login state
+      dispatch(restoreSession({ user, access: accessToken })); // ✅ Restore login state
+    } else {
+      dispatch(restoreFinished());
     }
   }, [dispatch]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <Router>
       <Routes>
+
+      {/* {Home Route} */}
+        < Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Home />}/>
         {/* Public Routes (Login & Signup) */}
-        <Route path="/login" element={ isAuthenticated ? <Navigate to={"/"} /> :<Login />} />
+        <Route
+          path="/login"
+          element={
+            loading ? (<Loader />) : isAuthenticated ? (<Navigate to="/dashboard" />) : (<Login />)}
+        />
         <Route path="/signup" element={<Signup />} />
 
         {/* Protected Routes (Only for logged-in users) */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={ <Home />} />
+          <Route path="/dashboard" element={<MainLayout />}>
+            <Route index element={<Dashboard />} />
             <Route path="user/:userId" element={<UserDetails />} />
             <Route path="uploadcv" element={<UploadCV />} />
             <Route path="quiz" element={<Quiz />} />
