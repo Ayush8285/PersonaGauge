@@ -6,6 +6,7 @@ from pymongo import MongoClient
 from gridfs import GridFS
 import pdfplumber  # For text extraction
 from bson import ObjectId
+from datetime import datetime
 from db_connection import db, fs  # Import MongoDB connection
 
 cv_collection = db["cv_data"]  # Collection for extracted CV data
@@ -32,7 +33,8 @@ def upload_cv(request):
             "user_id": user_id,  # Store user_id
             "file_id": str(file_id),
             "filename": file.name,
-            "extracted_text": extracted_text
+            "extracted_text": extracted_text,
+            "timestamp": datetime.utcnow(),
         }
         cv_collection.insert_one(cv_data)
 

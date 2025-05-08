@@ -152,9 +152,9 @@ const Results = () => {
               y: {
                 beginAtZero: true,
                 min: 0,
-                max: 25,
+                max: 60,
                 ticks: {
-                  stepSize: 5,
+                  stepSize: 6,
                 },
               },
             },

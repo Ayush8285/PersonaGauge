@@ -1,7 +1,7 @@
 import jwt
-import datetime
 import bcrypt
 from django.conf import settings
+from datetime import datetime, timedelta
 from pymongo import MongoClient
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -48,7 +48,8 @@ class SignupView(APIView):
             new_user = {
                 "email": email,
                 "password": hashed_password,
-                "name": name
+                "name": name,
+                "timestamp": datetime.utcnow(),
             }
             result = users_collection.insert_one(new_user)
             user_id = str(result.inserted_id)  # Convert ObjectId to string
@@ -57,8 +58,8 @@ class SignupView(APIView):
             payload = {
                 "id": user_id,  # Store user_id in token
                 "email": email,
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1),
-                "iat": datetime.datetime.utcnow(),
+                "exp": datetime.utcnow() + timedelta(hours=1),
+                "iat": datetime.utcnow(),
             }
             access_token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
 

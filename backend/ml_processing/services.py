@@ -9,7 +9,9 @@ from scipy.sparse import hstack
 from nltk.corpus import stopwords
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
 from db_connection import db  # MongoDB connection
+import random
 
 # Download stopwords if not already
 nltk.download("stopwords")
@@ -34,86 +36,59 @@ def clean_text(text):
     filtered = [word for word in words if word not in stop_words]
     return " ".join(filtered)
 
-def get_quiz_answer_numeric(answer):
-    """Map quiz answer to numeric scale"""
-    mapping = {
-        "Strongly agree": 3,
-        "Agree": 2,
-        "Neutral": 1,
-        "Disagree": 0,
-        "Strongly disagree": -1
-    }
-    return mapping.get(answer, 0)
-
-def softmax_scaled(probs, temperature=0.6):
-    """Temperature-scaled softmax to boost the top class but preserve others"""
-    logits = np.log(np.array(probs) + 1e-9) / temperature
-    exp_probs = np.exp(logits - np.max(logits))  # for stability
-    softmax = exp_probs / np.sum(exp_probs)
-    return [round(p * 100, 2) for p in softmax]
-
-def normalize_and_smooth_probs(raw_probs, top_boost=70.0, min_base=10.0):
+def get_quiz_answer_numeric(answer, options):
     """
-    Smooth probabilities:
-    - Top predicted class is boosted to `top_boost`
-    - Other classes are scaled proportionally with a base value (`min_base`)
+    Map quiz answer to a normalized numeric scale based on its index in options.
+    The first option gets the lowest value (0), the last gets the highest (1).
     """
-    raw_probs = np.array(raw_probs)
-    top_idx = np.argmax(raw_probs)
-    top_value = raw_probs[top_idx]
+    if not options or answer not in options:
+        return 0.0  # Default if answer is not valid
 
-    # Calculate the remaining probabilities
-    remaining = np.delete(raw_probs, top_idx)
-
-    # Normalize remaining to sum to 1
-    if remaining.sum() == 0:
-        remaining_scaled = np.full_like(remaining, 1 / len(remaining))
-    else:
-        remaining_scaled = remaining / remaining.sum()
-
-    # Apply the remaining weight after boosting the top class
-    remaining_weight = 100 - top_boost
-    remaining_probs = [r * remaining_weight for r in remaining_scaled]
-
-    # Ensure a minimum threshold for each category
-    adjusted_probs = [max(r, min_base) for r in remaining_probs]
-
-    # Construct the final distribution with adjusted values
-    final_probs = []
-    counter = 0
-    for i in range(len(raw_probs)):
-        if i == top_idx:
-            final_probs.append(round(top_boost, 2))
-        else:
-            final_probs.append(round(adjusted_probs[counter], 2))
-            counter += 1
-
-    # Fix any rounding issues to ensure the total is 100
-    diff = 100 - sum(final_probs)
-    final_probs[top_idx] += round(diff, 2)
-
-    return final_probs
-
-# ----------- Main Prediction Logic -----------
+    idx = options.index(answer)
+    normalized_value = idx / (len(options) - 1) if len(options) > 1 else 1.0
+    return normalized_value
 
 def get_user_data(user_id):
-    """Fetch and preprocess user data from DB"""
-    user_cv = cv_data.find_one({"user_id": user_id})
-    user_quiz = quiz_data.find_one({"user_id": user_id})
+    """Fetch and process the latest submitted CV and quiz data for a user"""
+    print(f"Fetching data for user_id: {user_id} (type: {type(user_id)})")
+    
+    # Fetch latest CV
+    user_cv = cv_data.find_one(
+        {"user_id": user_id},
+        sort=[("timestamp", pymongo.DESCENDING)]
+    )
+    
+    # Fetch latest quiz answers
+    user_quiz = quiz_data.find_one(
+        {"user_id": user_id},
+        sort=[("timestamp", pymongo.DESCENDING)]
+    )
 
     if not user_cv or not user_quiz:
         return None
 
+    # Clean CV text
     cleaned_cv_text = clean_text(user_cv.get("extracted_text", ""))
-    quiz_answers = [response["answer"] for response in user_quiz.get("responses", [])]
-    quiz_answers_numeric = np.array(
-        [get_quiz_answer_numeric(ans) for ans in quiz_answers], dtype=np.float64
-    ).reshape(1, -1)
+
+    # Convert quiz answers dynamically to numeric using answer & options
+    responses = user_quiz.get("responses", [])
+    quiz_numeric = []
+    for response in responses:
+        answer = response.get("answer")
+        options = response.get("options", [])
+        numeric_value = get_quiz_answer_numeric(answer, options)
+        quiz_numeric.append(numeric_value)
+
+    quiz_answers_numeric = np.array(quiz_numeric, dtype=np.float64).reshape(1, -1)
 
     return {
         "cv_text": cleaned_cv_text,
         "quiz_answers": quiz_answers_numeric
     }
+
+def scale_confidences(probs):
+    """Scale raw probabilities independently to 0-100 for each class"""
+    return [round(p * 100, 2) for p in probs]
 
 def predict_personality_and_job(user_id):
     """Predict personality and job role based on user inputs"""
@@ -127,29 +102,41 @@ def predict_personality_and_job(user_id):
 
     # Predict personality
     raw_personality_probs = svm_personality.predict_proba(X_combined)[0]
-    personality_probs = normalize_and_smooth_probs(raw_personality_probs, top_boost=70.0)
+    personality_confidences = scale_confidences(raw_personality_probs)
     personality_labels = personality_encoder.classes_
-    best_personality_idx = int(np.argmax(personality_probs))
+    best_personality_idx = int(np.argmax(personality_confidences))
 
     # Predict job role
     raw_job_probs = svm_job.predict_proba(X_combined)[0]
-    job_probs = normalize_and_smooth_probs(raw_job_probs, top_boost=70.0)
+    job_confidences = scale_confidences(raw_job_probs)
     job_labels = job_encoder.classes_
-    best_job_idx = int(np.argmax(job_probs))
+    best_job_idx = int(np.argmax(job_confidences))
+
+    # Build dynamic personality distribution (random order)
+    personality_distribution = {
+        label: conf for label, conf in zip(personality_labels, personality_confidences)
+    }
+    
+    # Randomize personality distribution order
+    personality_distribution = dict(random.sample(personality_distribution.items(), len(personality_distribution)))
+
+    # Build dynamic job role distribution (random order)
+    job_distribution = {
+        label: conf for label, conf in zip(job_labels, job_confidences)
+    }
+
+    # Randomize job role distribution order
+    job_distribution = dict(random.sample(job_distribution.items(), len(job_distribution)))
 
     return {
         "personality": {
             "label": personality_labels[best_personality_idx],
-            "confidence": personality_probs[best_personality_idx],
-            "distribution": {
-                label: prob for label, prob in zip(personality_labels, personality_probs)
-            }
+            "confidence": personality_confidences[best_personality_idx],
+            "distribution": personality_distribution
         },
         "job_role": {
             "label": job_labels[best_job_idx],
-            "confidence": job_probs[best_job_idx],
-            "distribution": {
-                label: prob for label, prob in zip(job_labels, job_probs)
-            }
+            "confidence": job_confidences[best_job_idx],
+            "distribution": job_distribution
         }
     }

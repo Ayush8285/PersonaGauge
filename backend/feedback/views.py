@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from db_connection import db  # Import MongoDB connection
+from datetime import datetime
 
 # Reference to the feedback collection
 feedback_collection = db["feedback"]
@@ -23,7 +24,8 @@ def submit_feedback(request):
             feedback_collection.insert_one({
                 "name": name,
                 "email": email,
-                "message": message
+                "message": message,
+                "timestamp": datetime.utcnow()
             })
 
             return JsonResponse({"message": "Feedback submitted successfully!"}, status=201)

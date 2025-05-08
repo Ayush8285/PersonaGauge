@@ -2,6 +2,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from pymongo import MongoClient
+from datetime import datetime
 from db_connection import db  # Import MongoDB connection
 
 quiz_collection = db["quiz_answers"]  # MongoDB collection for quiz answers
@@ -21,7 +22,9 @@ def submit_quiz(request):
             # Store in MongoDB
             quiz_collection.insert_one({
                 "user_id": user_id,
-                "responses": responses
+                "responses": responses,
+                "timestamp": datetime.utcnow(),
+                
             })
 
             return JsonResponse({"message": "Quiz answers saved successfully!"}, status=201)
