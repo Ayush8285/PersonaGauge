@@ -11,6 +11,9 @@ const { Title, Paragraph } = Typography;
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+  const userId = useSelector((state) => state.auth.userId); // Replace with actual user ID (from auth)
+  const cvId = useSelector((state) => state.cv.cvId);
+  const quizId = useSelector((state) => state.quiz.quizId);
 
   if (!user) {
     return <div><Loader /></div>; // Avoid rendering if user is null
@@ -56,7 +59,7 @@ const Dashboard = () => {
         <Card
           hoverable
           className="text-center transition-transform duration-300 transform hover:scale-105 shadow-lg w-full sm:w-80 md:w-96"
-          onClick={() => navigate("/dashboard/result")}
+          onClick={() => navigate(`/dashboard/allresults/${userId}/${cvId}/${quizId}`)}
         >
           <BarChartOutlined className="text-5xl text-yellow-600 mb-4 transition-all duration-300" />
           <Title level={4} className="text-xl font-semibold text-gray-800">Career Insights</Title>

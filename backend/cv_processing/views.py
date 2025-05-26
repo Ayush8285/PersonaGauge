@@ -1,4 +1,5 @@
 import json
+import re
 from django.http import JsonResponse, FileResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
@@ -16,33 +17,43 @@ def upload_cv(request):
     if request.method == "POST":
         if "cv" not in request.FILES:
             return JsonResponse({"error": "No file uploaded"}, status=400)
-        
-        # Extract `user_id` from request
+
         user_id = request.POST.get("user_id")
         if not user_id:
             return JsonResponse({"error": "User ID is required"}, status=400)
 
         file = request.FILES["cv"]
-        file_id = fs.put(file.read(), filename=file.name)  # Store file in GridFS
-
-        # Extract text from the CV
         extracted_text = extract_text_from_pdf(file)
 
-        # Store extracted text along with `user_id`
+        # ✅ Validate CV content
+        if not extracted_text or not is_valid_cv(extracted_text):
+            return JsonResponse({
+                "error": "Uploaded file does not appear to be a valid CV. Please upload a proper resume."
+            }, status=400)
+
+        # Save file to GridFS
+        file.seek(0)
+        file_id = fs.put(file.read(), filename=file.name)
+
+        # Insert into MongoDB and get the inserted ID
         cv_data = {
-            "user_id": user_id,  # Store user_id
+            "user_id": user_id,
             "file_id": str(file_id),
             "filename": file.name,
             "extracted_text": extracted_text,
             "timestamp": datetime.utcnow(),
         }
-        cv_collection.insert_one(cv_data)
+        result = cv_collection.insert_one(cv_data)
+        # print(f"CV uploaded successfully with ID: {inserted_id}")
 
         return JsonResponse({
             "message": "File uploaded successfully",
+            "_id": str(result.inserted_id),  # ✅ return the CV document ID
             "file_id": str(file_id),
             "user_id": user_id
         })
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
 
@@ -55,45 +66,104 @@ def extract_text_from_pdf(file):
                 text += extracted_text + "\n"
     return text.strip()
 
+#for one file metadata that related to particular user
+# @require_GET
+# def get_cv_metadata(request, user_id):
+#     """Return CV metadata directly from the collection (no GridFS access)."""
+#     try:
+#         cv_record = cv_collection.find_one({"user_id": user_id})
+#         if not cv_record:
+#             return JsonResponse({"error": "CV not found for this user"}, status=404)
 
+#         return JsonResponse({
+#             "filename": cv_record.get("filename"),
+#             "user_id": cv_record.get("user_id"),
+#             "file_id": cv_record.get("file_id")
+#         })
+
+#     except Exception as e:
+#         return JsonResponse({"error": str(e)}, status=500)
+    
+    
+# for every file meta data that related to particular user
 @require_GET
-def get_cv_metadata(request, user_id):
-    """Return CV metadata directly from the collection (no GridFS access)."""
+def get_all_cv_metadata(request, user_id):
+    """Return all CV metadata sorted by most recent."""
     try:
-        cv_record = cv_collection.find_one({"user_id": user_id})
-        if not cv_record:
-            return JsonResponse({"error": "CV not found for this user"}, status=404)
+        cv_records = list(cv_collection.find({"user_id": user_id}).sort("timestamp", -1))  # sort by latest
+        if not cv_records:
+            return JsonResponse([], safe=False)
 
-        return JsonResponse({
-            "filename": cv_record.get("filename"),
-            "user_id": cv_record.get("user_id"),
-            "file_id": cv_record.get("file_id")
-        })
+        result = [
+            {
+                "_id": str(cv["_id"]),
+                "filename": cv.get("filename"),
+                "user_id": cv.get("user_id"),
+                "file_id": str(cv.get("file_id")),
+                "timestamp": cv.get("timestamp")
+            }
+            for cv in cv_records
+        ]
+        return JsonResponse(result, safe=False)
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
 
 
+# for one file that related to particular user
+# @require_GET
+# def serve_cv_file(request, user_id):
+#     """Serve the CV file using user_id passed in URL."""
+#     try:
+#         # Find the CV record using user_id
+#         cv_record = cv_collection.find_one({"user_id": user_id})
+#         if not cv_record:
+#             return JsonResponse({"error": "CV not found for this user"}, status=404)
+
+#         file_id = cv_record.get("file_id")
+#         if not file_id:
+#             return JsonResponse({"error": "File ID missing in CV record"}, status=500)
+
+#         # Fetch file from GridFS using file_id
+#         file = fs.get(ObjectId(file_id))
+#         return FileResponse(file, content_type="application/pdf", filename=file.filename)
+
+#     except Exception as e:
+#         return JsonResponse({"error": str(e)}, status=500)
+    
+
+# for every file that related to particular user
 @require_GET
-def serve_cv_file(request, user_id):
-    """Serve the CV file using user_id passed in URL."""
+def serve_cv_by_id(request, user_id, cv_id):
+    """Serve a specific CV file based on its document ID."""
     try:
-        # Find the CV record using user_id
-        cv_record = cv_collection.find_one({"user_id": user_id})
-        if not cv_record:
-            return JsonResponse({"error": "CV not found for this user"}, status=404)
+        record = cv_collection.find_one({"_id": ObjectId(cv_id), "user_id": user_id})
+        if not record:
+            return JsonResponse({"error": "CV not found"}, status=404)
 
-        file_id = cv_record.get("file_id")
-        if not file_id:
-            return JsonResponse({"error": "File ID missing in CV record"}, status=500)
-
-        # Fetch file from GridFS using file_id
-        file = fs.get(ObjectId(file_id))
+        file = fs.get(ObjectId(record["file_id"]))
         return FileResponse(file, content_type="application/pdf", filename=file.filename)
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
+
+def is_valid_cv(text):
+    # Convert to lowercase for easier keyword detection
+    text_lower = text.lower()
+
+    # Define common CV/resume-related keywords
+    keywords = [
+        "email", "phone", "contact", "experience", "skills",
+        "education", "summary", "projects", "work", "certification",
+        "qualification", "objective", "linkedin", "github"
+    ]
+
+    # Count how many keywords appear in the text
+    keyword_hits = sum(1 for word in keywords if word in text_lower)
+
+    # Heuristic: if at least 3 keywords are found, consider it a valid CV
+    return keyword_hits >= 3
 
 

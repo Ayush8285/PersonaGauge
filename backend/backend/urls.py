@@ -19,7 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # path("personaGauge/", include("personaGauge.urls")),
      path("api/cv/", include("cv_processing.urls")),  # Including CV-related URLs
     path("api/quiz/", include("quiz.urls")), # Including quiz-related URLs
     path("api/auth/", include("authentication.urls")), #for user login and logout

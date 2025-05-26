@@ -2,6 +2,7 @@ import os
 import re
 import nltk
 import pickle
+# import logging
 import pymongo
 import numpy as np
 from bson import ObjectId
@@ -19,6 +20,8 @@ nltk.download("stopwords")
 # Load collections
 cv_data = db["cv_data"]
 quiz_data = db["quiz_answers"]
+prediction_data = db["prediction"]
+
 
 # Load the trained model and encoders
 model_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "ml_models", "svm_model.pkl"))
@@ -83,8 +86,12 @@ def get_user_data(user_id):
 
     return {
         "cv_text": cleaned_cv_text,
-        "quiz_answers": quiz_answers_numeric
+        "quiz_answers": quiz_answers_numeric,
+        "cv_id": str(user_cv.get("_id")),
+        "quiz_id": str(user_quiz.get("_id")),
+        "user_id": user_id
     }
+
 
 def scale_confidences(probs):
     """Scale raw probabilities independently to 0-100 for each class"""
@@ -112,31 +119,64 @@ def predict_personality_and_job(user_id):
     job_labels = job_encoder.classes_
     best_job_idx = int(np.argmax(job_confidences))
 
-    # Build dynamic personality distribution (random order)
-    personality_distribution = {
-        label: conf for label, conf in zip(personality_labels, personality_confidences)
-    }
-    
-    # Randomize personality distribution order
-    personality_distribution = dict(random.sample(personality_distribution.items(), len(personality_distribution)))
+    # Build personality and job distributions (randomized order)
+    personality_distribution = dict(random.sample(
+        dict(zip(personality_labels, personality_confidences)).items(),
+        len(personality_labels)
+    ))
 
-    # Build dynamic job role distribution (random order)
-    job_distribution = {
-        label: conf for label, conf in zip(job_labels, job_confidences)
-    }
+    job_distribution = dict(random.sample(
+        dict(zip(job_labels, job_confidences)).items(),
+        len(job_labels)
+    ))
 
-    # Randomize job role distribution order
-    job_distribution = dict(random.sample(job_distribution.items(), len(job_distribution)))
-
-    return {
-        "personality": {
+    # Save to database
+    prediction_record = {
+        "user_id": user_data["user_id"],
+        "cv_id": user_data["cv_id"],
+        "quiz_id": user_data["quiz_id"],
+        "personality_prediction": {
             "label": personality_labels[best_personality_idx],
             "confidence": personality_confidences[best_personality_idx],
             "distribution": personality_distribution
         },
-        "job_role": {
+        "job_role_prediction": {
             "label": job_labels[best_job_idx],
             "confidence": job_confidences[best_job_idx],
             "distribution": job_distribution
-        }
+        },
+        "timestamp": datetime.utcnow()
     }
+
+    prediction_data.insert_one(prediction_record)
+
+    return {
+        "personality": prediction_record["personality_prediction"],
+        "job_role": prediction_record["job_role_prediction"]
+    }
+
+
+
+
+
+#result of prediction
+def get_prediction_result(user_id, cv_id, quiz_id):
+    # logging.info(f"Searching prediction with user_id={user_id}, cv_id={cv_id}, quiz_id={quiz_id}")
+    try:
+        prediction = db["prediction"].find_one({
+            "user_id": user_id,
+            "cv_id": cv_id,
+            "quiz_id": quiz_id,
+        })
+        # print(f"Found prediction: {prediction}")
+    except Exception as e:
+        # logging.error(f"Error during DB query: {e}")
+        return {"error": "Internal server error"}
+
+    if not prediction:
+        return {"error": "Prediction not found"}
+
+    prediction["_id"] = str(prediction["_id"])
+    return prediction
+
+

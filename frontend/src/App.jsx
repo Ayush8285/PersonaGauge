@@ -17,6 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import UploadCV from "./pages/UploadCV";
 import Quiz from "./pages/Quiz";
 import Result from "./pages/Results";
+import AllResults from "./pages/All_Result";
 import Feedback from "./pages/Feedback";
 import ContactUs from "./pages/ContactUs";
 import AboutUs from "./pages/AboutUs";
@@ -65,6 +66,7 @@ const App = () => {
             <Route path="uploadcv" element={<UploadCV />} />
             <Route path="quiz" element={<Quiz />} />
             <Route path="result" element={<Result />} />
+            <Route path="allresults/:user_id/:cv_id/:quiz_id" element={<AllResults />} />
             <Route path="feedback" element={<Feedback />} />
             <Route path="about" element={<AboutUs />} />
             <Route path="contact" element={<ContactUs />} />

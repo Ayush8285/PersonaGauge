@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector , useDispatch} from "react-redux";
 import { Button, Radio, Card, Space, Typography, Divider, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import questions from "../data/questions.json"; // Questions JSON
+import { setQuizId } from "../redux/slices/quizSlice";
 
 const { Title, Paragraph } = Typography;
 
@@ -11,6 +12,7 @@ const Quiz = () => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [answers, setAnswers] = useState([]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth.userId); // Replace with actual user ID (from auth)
 
   useEffect(() => {
@@ -66,7 +68,11 @@ const Quiz = () => {
       const data = await response.json();
       if (response.ok) {
         console.log("Quiz submitted successfully!", data);
-        navigate("/dashboard/result");
+
+      // ✅ Store quiz ID in Redux
+      dispatch(setQuizId(data._id));
+
+        navigate(`/dashboard/result`);
       } else {
         console.error("Error submitting quiz:", data.error);
       }

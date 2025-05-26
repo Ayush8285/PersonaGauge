@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .services import get_user_data, predict_personality_and_job
+from .services import get_user_data, predict_personality_and_job, get_prediction_result
 
 @csrf_exempt
 def fetch_processed_data(request, user_id):
@@ -18,6 +18,15 @@ def fetch_processed_data(request, user_id):
 def fetch_predictions(request, user_id):
     """API to get personality and job role prediction"""
     result = predict_personality_and_job(user_id)
+    if "error" in result:
+        return JsonResponse(result, status=404)
+    
+    return JsonResponse(result, safe=False)
+
+@csrf_exempt
+def fetch_prediction_result(request, user_id, cv_id, quiz_id):
+    """API to get personality and job role prediction result fro a specifi cv and quiz"""
+    result = get_prediction_result(user_id, cv_id, quiz_id)
     if "error" in result:
         return JsonResponse(result, status=404)
     
