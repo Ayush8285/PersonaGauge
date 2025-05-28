@@ -1,8 +1,12 @@
+from dotenv import load_dotenv
+import os
 import pymongo
 import gridfs
 
+load_dotenv()  # loads variables from .env into environment
+
 # MongoDB connection
-MONGO_URI = "mongodb://localhost:27017/"
+MONGO_URI = os.getenv('MONGO_URL')
 client = pymongo.MongoClient(MONGO_URI)
 
 # Database name
