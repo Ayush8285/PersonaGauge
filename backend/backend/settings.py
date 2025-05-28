@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-gm#(pr)_(lfb!-0uv=$b6-gw$lyt##m!gysk@r5^3r#zi&z7vn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'personagauge-backend.onrender.com']
 
 
 # Application definition
