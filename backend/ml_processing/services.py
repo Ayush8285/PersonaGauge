@@ -1,6 +1,6 @@
 import os
 import re
-import nltk
+# import nltk
 import pickle
 # import logging
 import pymongo
@@ -15,7 +15,7 @@ from db_connection import db  # MongoDB connection
 import random
 
 # Download stopwords if not already
-nltk.download("stopwords")
+# nltk.download("stopwords")
 
 # Load collections
 cv_data = db["cv_data"]
