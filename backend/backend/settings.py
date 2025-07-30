@@ -138,7 +138,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #CORS SETTINGS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # React Frontend URL
-    "https://personagauge.vercel.app",  # Production Frontend URL
+    "https://persona-gauge.vercel.app/",  # Production Frontend URL
 ]
 
 CORS_ALLOW_CREDENTIALS = True  # If sending authentication tokens
