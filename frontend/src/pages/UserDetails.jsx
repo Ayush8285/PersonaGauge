@@ -52,7 +52,7 @@ const UserDetails = () => {
         );
         setCvData(cvFiles.filter(Boolean));
       } catch (err) {
-        setError(err.message);
+        setError("first upload your CV and answer the quiz");
       } finally {
         setLoading(false);
       }

@@ -48,6 +48,7 @@ EXTERNAL_APPS = [
     "ml_processing",       #correct data send to svm model for prediction  
     "feedback",            #feedback from user
     "settings_app",         #user settings
+    'model_accuracy',
     
 ]
 

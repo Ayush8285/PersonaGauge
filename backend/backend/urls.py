@@ -24,4 +24,5 @@ urlpatterns = [
     path("api/auth/", include("authentication.urls")), #for user login and logout
     path("api/ml/", include("ml_processing.urls")), # Including ML-related URLs
     path("api/feedback/", include("feedback.urls")),  # Include feedback API
+    path("api/accuracy/", include("model_accuracy.urls")),
 ]

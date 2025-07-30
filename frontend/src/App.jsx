@@ -23,6 +23,7 @@ import ContactUs from "./pages/ContactUs";
 import AboutUs from "./pages/AboutUs";
 import Settings from "./pages/Settings";
 import UserDetails from "./pages/UserDetails";
+import AccuracyChart from "./pages/AccuracyChart"
 
 const App = () => {
   const dispatch = useDispatch();
@@ -57,6 +58,7 @@ const App = () => {
             loading ? (<Loader />) : isAuthenticated ? (<Navigate to="/dashboard" />) : (<Login />)}
         />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/accuracy" element={<AccuracyChart />} />
 
         {/* Protected Routes (Only for logged-in users) */}
         <Route element={<ProtectedRoute />}>
