@@ -16,9 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from feedback.views import home  # import your view
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+     path('', home),  # this handles the root URL "/"
      path("cv/", include("cv_processing.urls")),  # Including CV-related URLs
     path("quiz/", include("quiz.urls")), # Including quiz-related URLs
     path("auth/", include("authentication.urls")), #for user login and logout
