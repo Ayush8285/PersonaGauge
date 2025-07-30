@@ -51,6 +51,12 @@
 
 ---
 
+## 🚀 Live URL
+
+- Frontend: [Vercel URL](https://persona-gauge.vercel.app/)
+
+---
+
 ## 🧰 Frontend Setup (React + Vite)
 
 ### Prerequisites
